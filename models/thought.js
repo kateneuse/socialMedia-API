@@ -1,31 +1,35 @@
 const { Schema, model } = require('mongoose');
-const Reaction = require('./Reaction.js')
-const formatter = require('../utils/formatter.js');
+const reactionSchema = require('./Reaction');
+const moment = require('moment');
 
 const thoughtSchema = new Schema({
-  thoughtText: {
-    type: String,
-    min: [1, 'Please enter at least one character'],
-    max: [280, 'Maximum length exceeded. ({VALUE} characters vs. maximum 280.)'],
-    required: true
-  },
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    get: (timestamp) => formatter(timestamp),
-  },
-  reactions: [Reaction],
-},
-  {
-    toJSON: {
-      getters: true,
+    thoughtText: {
+        type: String,
+        required: true,
+        minLength: 1,
+        maxLength: 280
     },
-    id: false,
-  });
+    createdAt: {
+        type: Date,
+        default: Date.now,
+        get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a')
+    },
+    username: {
+        type: String,
+        required: true
+    },
+    reactions: [reactionSchema]
+},
+{
+    toJSON: {
+        virtuals: true,
+        getters: true
+    },
+    id: false
+});
 
-thoughtSchema.virtual('reactionCount').get(function () {
-  return this.reactions.length;
+thoughtSchema.virtual('reactionCount').get(function() {
+    return this.reactions.length;
 });
 
 const Thought = model('Thought', thoughtSchema);
