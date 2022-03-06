@@ -1,8 +1,13 @@
-
-  {
+{ 
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "node utils/seed"
+  },
   "dependencies": {
-    "express": "^4.17.2",
-    "moment": "^2.29.1",
-    "mongoose": "^6.2.1"
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13",
+    "moment": "^2.29.1"
+
   }
+ 
 }
